@@ -1,0 +1,44 @@
+from langdetect import detect, DetectorFactory
+from langdetect.lang_detect_exception import LangDetectException
+import langdetect
+
+DetectorFactory.seed = 0
+
+def detect_language(text: str) -> str:
+    try:
+        # Detect language of the text
+        language = detect(text)
+        return language
+    except LangDetectException:
+        return "Could not detect language"
+
+def batch_detect_language(text_list: list) -> dict:
+    language_results = {}
+    for i, text in enumerate(text_list, start=1):
+        language_results[f"Text {i}"] = detect_language(text)
+    return language_results
+
+if __name__ == "__main__":
+    print("Language Detection Program")
+
+    sample_texts = [
+        "Bonjour tout le monde",  # French
+        "Hello world",  # English
+        "Hola mundo",  # Spanish
+        "Hallo Welt",  # German
+        "こんにちは世界",  # Japanese
+        "Привет мир",  # Russian
+        "안녕하세요 세계",  # Korean
+        "नमस्ते दुनिया",  # Hindi
+        "नमस्कार जग",  # Marathi
+        "你好，世界",  # Chinese
+        "Olá mundo"  # Portuguese
+    ]
+    
+    results = batch_detect_language(sample_texts)
+    
+    for text_id, lang in results.items():
+        print(f"{text_id}: Detected language is {lang}")
+
+    user_text = input("Enter a sentence to detect its language: ")
+    print(f"The detected language is: {detect_language(user_text)}")
